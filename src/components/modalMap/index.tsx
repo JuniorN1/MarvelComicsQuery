@@ -95,7 +95,7 @@ const COLOR_3 ="#1C1C1C";
 const styles = StyleSheet.create({
     textHeader:{
         fontFamily:"Marvel",
-        fontSize:25,
+        fontSize:20,
         color:COLOR_2,
         marginLeft:wp(10),
         marginRight:wp(10)
