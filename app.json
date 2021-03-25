@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "brisanet",
-    "slug": "brisanet",
+    "name": "MarvelComics",
+    "slug": "MarvelComics",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
