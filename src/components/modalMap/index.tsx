@@ -9,7 +9,7 @@ interface Props{
     show?:boolean|any;
     hiddenModal:any;
 }
-const KEY="AIzaSyCYvMpmVhFc0ydILEuXGJNYNGFnBoKPCL8"
+
 const ModalMaps=({show=false,hiddenModal}:Props)=>{
     const [position,setPosition] = useState({latitude:0,longitude:0}); 
     const handleSelectMapPosition=(event:MapEvent)=>{     
