@@ -1,50 +1,80 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-interface Props{
-    item:any;
-    modalProps:any;
-   
+interface Comic{  
+    description:string;
+    title:string;
+    thumbnail:{
+        extension:string;
+        path:string;
+    }
 }
-
-const Items = ({item,modalProps}:Props)=>{  
-        const name=(params:boolean) =>{
-            modalProps({show:true,selectedItems:params})
-        } 
-        const description = (description:string)=>{
-            if(description === null)return "This comic not have Discription!";
-            return (String(description).substr(0,100));
-        } 
-        return(
-            <View style={styles.listContainer}>                       
-                <Image style={styles.hqThumbnail} source={{
-                    uri:`${item.thumbnail.path}.${item.thumbnail.extension}`}
-                }/>
-                <View style={styles.hqInformationsAndOptions}>         
-                    <View style={styles.containerInformation}>
-                        <Text style={styles.title}>{item.title.substr(0,10)}...</Text>                
-                        <Text style={styles.description}>{description(item.description)}...</Text>                
-                    </View>
+interface Props{
+    showModalDetails:any;
+    selectComic:{
+        option:any;
+        item:boolean;
+    }|any;
+    comic:Comic;
+    findItem :Comic[];
+}
+const Items = ({showModalDetails,selectComic,comic,findItem}:Props)=>{ 
+    const check =  findItem.find((element:any) => element.title ===comic.title);    
+    const [selectOrRemove,setSelectOrRemove] = useState<boolean>(
+        check!=undefined?true:false
+    )    
+    const handlesShowDetails=(comic:Comic) =>{
+        showModalDetails({show:true,selectedItems:comic});
+    } 
+    const description = (description:string)=>{
+        if(description === null)return "This comic not have Discription!";
+        return (String(description).substr(0,100));
+    } 
+    const handlesSelect=async (comic:Comic)=>{
+        const selected = !selectOrRemove;
+        setSelectOrRemove(selected);
+        selectComic({selected,comic});
+    }
+    return(
+        <View style={styles.listContainer}>                       
+            <Image style={styles.hqThumbnail} source={{
+                uri:`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+            }/>
+            <View style={styles.hqInformationsAndOptions}>         
+                <View style={styles.containerInformation}>
+                    <Text style={styles.title}>{comic.title.substr(0,10)}...</Text>                
+                    <Text style={styles.description}>{description(comic.description)}...</Text>                
+                </View>
+                <View style={styles.buttonItemsContainer}>
                     <TouchableOpacity                                     
-                        onPress={()=>name(item)}
+                        onPress={()=>handlesShowDetails(comic)}
                         style={styles.buttonListContaine} 
                         activeOpacity={0.7}    
                     >                
                         <Text style={styles.textButton}> 
-                            Show Details
+                            Detalhes
+                        </Text>                
+                    </TouchableOpacity>
+                    <TouchableOpacity                                     
+                        onPress={()=>handlesSelect(comic)}
+                        style={selectOrRemove?styles.buttonListContaineRemove:styles.buttonListContaine} 
+                        activeOpacity={0.7}    
+                    >                
+                        <Text style={styles.textButton}>                     
+                            {selectOrRemove?"Remove":"Selecionar"}
                         </Text>                
                     </TouchableOpacity>
                 </View>
             </View>
-        )
-    }
+        </View>
+    )
+}
 
 export default Items;
 const COLOR_1 ="red";
 const COLOR_2 ="#ffffff";
-const COLOR_3 ="#1C1C1C";
+const COLOR_3 ="darkblue";
 const styles = StyleSheet.create({
-
      listContainer:{
         marginTop:hp(2),
         backgroundColor:COLOR_2,
@@ -52,13 +82,26 @@ const styles = StyleSheet.create({
         height:hp(30),
         flexDirection:"row",   
         padding:10,
-        borderRadius:10     
-
+        borderRadius:10    
+    },
+    buttonListContaineRemove:{
+        height:40,  
+        marginLeft:wp(1), 
+        marginRight:wp(1),
+        width:wp(25),
+        backgroundColor:COLOR_3,
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius:10,
+        marginBottom:hp(2),
+    },
+    buttonItemsContainer:{
+        flexDirection:'row',
+        width:wp(54),
     },
     hqThumbnail:{
         width:wp(32),
         height:hp(28),
-
     },
     hqInformationsAndOptions:{
         marginLeft:wp(1),
@@ -68,24 +111,22 @@ const styles = StyleSheet.create({
     title:{
         fontFamily:"Marvel",
         fontSize:20
-
     },
     description:{
         fontFamily:"Marvel",
         fontSize:15,
         marginTop:hp(1)
-
     },
     buttonListContaine:{
-        height:40,   
+        height:40,  
+        marginLeft:wp(1), 
+        marginRight:wp(1),
+        width:wp(25),
         backgroundColor:COLOR_1,
         justifyContent:"center",
         alignItems:"center",
         borderRadius:10,
         marginBottom:hp(2),
-        position:"relative"
-        
-     
     },
     containerInformation:{
        height:hp(20)
@@ -93,6 +134,6 @@ const styles = StyleSheet.create({
     textButton:{
         color:COLOR_2,
         fontFamily:"Marvel",
-        fontSize:20
+        fontSize:15
     },
 })

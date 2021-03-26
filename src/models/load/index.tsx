@@ -1,36 +1,39 @@
 import md5 from "md5";
 import { Alert } from "react-native";
 import api from "../../services/api";
-const PRIVATE_KEY = "Your private marvel key";
-const PUBLIC_KEY = "Your public marvel key";
+import Marvel_key from '../../configs/index.json';
 function createHash(timeStamp:any) {
-    const toBeHashed = timeStamp + PRIVATE_KEY + PUBLIC_KEY;
+    const toBeHashed = timeStamp + Marvel_key.PRIVATE_KEY + Marvel_key.PUBLIC_KEY;
     const hashedMessage = md5(toBeHashed);
     return hashedMessage;
 }
- async function loadingComics(page:number) {
-
+interface Comic{
+    title:string;
+    description:string;
+    thumbnail:string;
+}
+async function loadingComics(page:number) {
     const timeStamp = Date.now().toString();
-    const offset = page ;
     const hash = createHash(timeStamp);
     const limit=50;
     const urlAPI =
-    `/comics?offset=${offset}&format=comic&orderBy=issueNumber&limit=${limit}&ts=${timeStamp}&apikey=${PUBLIC_KEY}&hash=${hash}`;    
+    `/comics?offset=${page}&format=comic&orderBy=issueNumber&limit=${limit}&ts=${timeStamp}&apikey=${Marvel_key.PUBLIC_KEY}&hash=${hash}`;    
     try{
         const response = await api.get(urlAPI);
-        const{
-   
-            data,
-          
+        const{   
+            data,          
         } =response;
-        return data;
+        const result = data.data.results.map(({title,description,thumbnail}:Comic)=>{
+            return (
+            { title,description,thumbnail}
+            )
+        })
+        return result;
     }catch(err){
         Alert.alert(
             "Error",
-            "Not cant loading comics!"
+            "Não foi possivel carregar os quadrinhos!"
         );
     }
-
-
 }
 export default loadingComics;

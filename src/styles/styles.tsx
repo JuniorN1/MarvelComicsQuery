@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         backgroundColor:COLOR_3,
-
         alignItems:"center"
     },
     header:{
@@ -20,9 +19,6 @@ const styles = StyleSheet.create({
         justifyContent:"center",
         alignItems:"center",
         backgroundColor:"red"
-
-
-
     },
     textHeader:{
         color:COLOR_2,
@@ -54,10 +50,18 @@ const styles = StyleSheet.create({
         fontFamily:"Marvel"
 
     },
-
-   
-  
- 
+    footer:{
+        height:hp(5),
+        width:wp(100),
+        justifyContent:"center",
+        alignItems:"center",
+        backgroundColor:COLOR_1,
+    },
+    textH3:{
+        color:COLOR_2,
+        fontFamily:"Marvel",
+        fontSize:20        
+    }
 
 })
 

@@ -2,19 +2,22 @@ import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+interface Comic{  
+    description:string;
+    title:string;
+    thumbnail:{
+        extension:string;
+        path:string;
+    }        
+}
 interface Props{
-    item:any;
+    item?:Comic|null;
     show:boolean;
     hiddenModalItems:any;
-    showModalMaps:any;
 }
-
-const ModalListe=({show=false,item=null,hiddenModalItems,showModalMaps}:Props)=>{
+const ModalListe=({show=false,item=null,hiddenModalItems}:Props)=>{
     const handlesClose=()=>{        
         hiddenModalItems(false);        
-    }
-    const handlesShow=()=>{        
-        showModalMaps(true);        
     }
     const description = (description:string)=>{
         if(description === null)return "This comic not have Discription!";
@@ -26,31 +29,23 @@ const ModalListe=({show=false,item=null,hiddenModalItems,showModalMaps}:Props)=>
             animationType="slide"
             transparent={true}
             visible={show}
-
         >
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
+            <View style={styleModalList.centeredView}>
+                <View style={styleModalList.modalView}>
                     <TouchableOpacity
                         onPress={() =>handlesClose()}
                     >
-                        <AntDesign name="closesquare" style={styles.textStyle}/>
-                        
+                        <AntDesign name="closesquare" style={styleModalList.iconConfig}/>                        
                     </TouchableOpacity>
                     <ScrollView>
-                        <View style={styles.containerHqInforModal}>
-                            <Image style={styles.hqImage} source={{
+                        <View style={styleModalList.containerHqInforModal}>
+                            <Image style={styleModalList.hqImage} source={{
                                 uri:`${item.thumbnail.path}.${item.thumbnail.extension}`}
                             }/>
-                            <Text style={styles.textH3} >Title:</Text>
-                            <Text style={styles.textH4} >{item.title}</Text>
-                            <Text style={styles.textH3} >Description:</Text>
-                            <Text style={styles.textH4} >{description(item.description)}</Text>
-                            <TouchableOpacity  
-                                onPress={() =>handlesShow()}
-                                style={styles.buttonModal} 
-                            >
-                                <Text style={styles.textButton} >Make Your Order</Text>
-                            </TouchableOpacity>
+                            <Text style={styleModalList.textTitle} >Titulo:</Text>
+                            <Text style={styleModalList.textDiscription} >{item.title}</Text>
+                            <Text style={styleModalList.textTitle} >Descrição:</Text>
+                            <Text style={styleModalList.textDiscription} >{description(item.description)}</Text>                         
                         </View>
                     </ScrollView>
                 </View>
@@ -61,8 +56,7 @@ const ModalListe=({show=false,item=null,hiddenModalItems,showModalMaps}:Props)=>
 }
 const COLOR_1 ="red";
 const COLOR_2 ="#ffffff";
-const styles = StyleSheet.create({
-    
+const styleModalList = StyleSheet.create({    
     centeredView: {
       backgroundColor:"black", 
     },
@@ -72,9 +66,8 @@ const styles = StyleSheet.create({
       backgroundColor: "white",
       borderRadius: 20,
     },
-    textStyle: {
-      color: "red",
- 
+    iconConfig: {
+      color: "red", 
       fontSize:25,
       padding:10
     },
@@ -84,7 +77,6 @@ const styles = StyleSheet.create({
     },
     containerHqInforModal:{
         width:wp(100),
-
         alignItems:"center"
     },
     titleModal:{
@@ -93,20 +85,17 @@ const styles = StyleSheet.create({
         marginBottom:10,
         marginTop:10
     },
-    textH4:{
+    textDiscription:{
         width:wp(90),
         marginTop:hp(2),
         fontFamily:"Marvel",
         fontSize:20,
-        
-
     },
-    textH3:{
+    textTitle:{
         width:wp(90),
         marginTop:hp(2),
         fontFamily:"Marvel",
         fontSize:30,
-        
     },
     buttonModal:{
         height:40,
@@ -117,10 +106,9 @@ const styles = StyleSheet.create({
         alignItems:"center",
         borderRadius:10,
         marginBottom:hp(2),
-        position:"relative"
-        
-     
-    },   textButton:{
+        position:"relative"     
+    },  
+    textButton:{
         color:COLOR_2,
         fontFamily:"Marvel",
         fontSize:20

@@ -2,32 +2,46 @@ import { FontAwesome } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Items from '../../components/Items/index';
 import ModalListe from "../../components/modaLItem";
 import ModalMaps from "../../components/modalMap";
 import loadingComicas from '../../models/load';
 import searchComic from "../../models/seach";
 import styles from '../../styles/styles';
+
+interface Comics{
+    description:string;
+    title:string;
+    thumbnail:{
+        extension:string;
+        path:string;
+    }
+}
 interface PropsItemsModal{
-    selectedItems:any; 
+    selectedItems?:Comics|null; 
     show:boolean;
 }
+interface PropsAddComic{
+    comic:Comics;
+    selected:boolean;
+}
 function HomeScreen(){
-    const [list,setList]                            =   useState<any[]>([]);
+    const [list,setList]                            =   useState<Comics[]>([]);
     const [actualPage,setActualPage]                =   useState<number>(0);
-    const [totalPage,setTotalPage]                  =   useState<number>(0);
+    const [totalPage,setTotalPage]                  =   useState<number>(1);
     const [showLoadingComic,setShowLoadingComic]    =   useState<boolean>(false);
-    const [modalListProp,setModalListProp]          =   useState<any>({
+    const [modalListProp,setModalListProp]          =   useState<PropsItemsModal>({
         show:false,
-        item:null
+        selectedItems:null
     });
-    const [modalMapsProp,setModalMapsProp] = useState<boolean>(false);
-
-    const CallModelList=({selectedItems,show}:PropsItemsModal)=>{
+    const [selectItem,setSelectItem]                =   useState<Comics[]>([]);
+    const [modalMapsProp,setModalMapsProp]          =   useState<boolean>(false);
+    const CallModelList=({selectedItems,show}:PropsItemsModal)=>{ 
         setModalListProp(
             {
-                show:show,
-                item:selectedItems
+                show,
+                selectedItems
             }
         )
     }
@@ -35,7 +49,7 @@ function HomeScreen(){
         setModalListProp(
             { 
                 show:false,
-                item:null
+                selectedItems:null
             }
         )
     }
@@ -45,59 +59,65 @@ function HomeScreen(){
     const CallHiddenModalMaps=()=>{
         setModalMapsProp(false)
     }
-    const CallSetPage=()=>{
-        setActualPage(actualPage+50);
+    const CallSetPage=(value:number)=>{      
+        if(value===0){setActualPage(0); return}
+        setActualPage(actualPage+value);
     }
     const CallSetList=(items:any)=>{
         setList([...list,...items]);  
+    }
+    const CallSetListSearch=(items:any)=>{
+        setList(items);  
     }
     const CallSetTotalPage=(total:number)=>{
         setTotalPage(total);
     }
     const CallSetShowLoadingComic=(visible:boolean)=>{
-     
         setShowLoadingComic(visible);
+    }   
+    const handlesAddItems =  ({selected,comic}:PropsAddComic) =>{ 
+        if(selected){    
+            setSelectItem([...selectItem,comic]) 
+        }else{
+            const remove = selectItem;
+            const found = remove.findIndex((element:any) => element ===comic);
+            remove.splice(found, 1);
+            setSelectItem(remove)         
+        }
+        return ;
     }
     const loading = async()=>{ 
         CallSetShowLoadingComic(true)
-        try{
-            
+        try{            
             if(totalPage===list.length && actualPage>0)return;
-
-            const response =  await loadingComicas(actualPage); 
-
-            CallSetList(response.data.results);
-            CallSetPage();
-           
+            const response =  await loadingComicas(actualPage);
+            CallSetList(response);
+            CallSetPage(50);           
             if(totalPage===0)CallSetTotalPage(response.data.total);
-            
         }catch(err){           
             Alert.alert(
                 "Error!",
-                "Not receive Response comics query!"
+                "Não foi possivel listar os quadrinhos!"
             )
         }  
-        CallSetShowLoadingComic(false)
-    }  
-
+        CallSetShowLoadingComic(false)     
+    } 
     const handlesSeach=async (seach:string)=>{
-       if(seach===''){loading(); return;}
+        CallSetPage(0);
+       if(seach===''){   loading(); return;}
         try{
             const response =  await searchComic(seach);            
-            setList(response.data.results); 
+            CallSetListSearch(response); 
         }catch(err){
             Alert.alert(
                 "Error!",
-                "Not receiver Response seach comics query!"
+                "Não foi possivel listar os quadrinhos!"
             )
         }      
     }
     useEffect(()=>{  
         loading();
     },[]);
-
-
-  
     return (        
         <View style={styles.container}>
             <AwesomeAlert
@@ -105,7 +125,7 @@ function HomeScreen(){
                 showProgress={true}
                 progressColor="#777777"
                 progressSize="large"
-                title="Is Loading Comics..."        
+                title="Loading Comics..."        
                 closeOnTouchOutside={false}
                 closeOnHardwareBackPress={false}
             /> 
@@ -120,23 +140,22 @@ function HomeScreen(){
                     style={styles.iconsSearch} 
                 />
                 <TextInput 
-                    placeholder="Search Comics!" 
+                    placeholder="Busca Rapida!" 
                     placeholderTextColor="red" 
                     style={styles.seachBox}
-                    onChangeText={(text)=>handlesSeach(text)}
-
-           
+                    onChangeText={(text)=>handlesSeach(text)}           
                 />
             </View>
             <ModalMaps 
                 show={modalMapsProp} 
                 hiddenModal={()=>CallHiddenModalMaps()}
+                items={()=>{}}
             />
             <ModalListe  
                 show={modalListProp.show} 
-                item={modalListProp.item} 
+                item={modalListProp.selectedItems} 
                 hiddenModalItems={CallHiddenModalItem}
-                showModalMaps={()=>CallShowModalMaps()}
+           
             />
             
             <FlatList 
@@ -145,16 +164,23 @@ function HomeScreen(){
                 onEndReachedThreshold={0.3}
                 showsVerticalScrollIndicator={true}
                 style={{marginTop:10}}
-                onEndReached={()=>loading()}
-                renderItem={({item})=>(
-                    
+                onEndReached={()=>{
+                    loading()
+                }}
+                renderItem={({item,index})=>(
                     <Items 
-                        item={item} 
-                        modalProps={(value:PropsItemsModal)=>CallModelList(value)}  
+                        comic={item} 
+                        selectComic={(value:any)=>handlesAddItems(value)}
+                        showModalDetails={(value:PropsItemsModal)=>CallModelList(value)} 
+                        findItem={selectItem}
+                     
                     />
                 )}
 
             />
+            <TouchableOpacity onPress={()=>CallShowModalMaps()} style={styles.footer}>
+                <Text style={styles.textH3}>Finalizar pedido</Text>
+            </TouchableOpacity>
         </View>
     )
 }

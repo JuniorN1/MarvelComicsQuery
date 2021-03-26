@@ -20,19 +20,18 @@
       "supportsTablet": true
     },
     "android": {
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#EC1D24"
       },
       "package": "com.JuniorSilva.MarvelComics",
+
       "useNextNotificationsApi": true,
       "config": {
         "googleMaps": {
           "apiKey": ""
         }
-      
-
-    
       }
     }
    
