@@ -6,15 +6,17 @@
 #### Instalação 
 ##### Configurando ambiente de desenvolvimento
 ###### Intalação do Node js
-Windows: voce pode simplesmente baixar o node js do site oficial e instalalo em um processo simples  https://nodejs.org/en/download/
+Windows: você pode simplesmente baixar o node js do site oficial e instalá-lo em um processo simples https://nodejs.org/en/download/ 
 Linux: no linux estarei disponibilizando um tutorial de como fazer a instalação https://nodejs.org/en/download/package-manager/
-###### Instalação do Yarn caso nao queira usar o npm
-com node js instalado voce ja deve poder usar o npm e execultando o comando abaixo poderar instalar o yarn para ambos os sistemas
+###### Instalação do Yarn caso não queira usar o npm
+com node js instalado você já deve poder usar o npm e executando o comando abaixo poderá instalar o yarn para ambos os sistemas
+
 ```npm install --global yarn```
 
 ###### instalação do Expo 
-provavelmente com o processo acima comcluido voce ja seja capais de iniciar o projeto ultilizando ```yarn start``` mais em caso de duvida
-voce poderar esta instalar o expo cli por meio desse comando para ambos sistemas ```yarn add global expo-cli``` ou ```npm add global expo-cli```
+provavelmente com o processo acima concluído você já seja capaz de iniciar o projeto utilizando ```yarn start``` mais em caso de dúvida
+você poderá está instalar o expo cli por meio desse comando para ambos sistemas ```yarn add global expo-cli``` ou ```npm add global expo-cli```
+
 
 
 ##### Configurando Aplicação
@@ -26,15 +28,16 @@ utilizando a api da marvel e a segunda e caso crie o apk ele reconheça o maps s
 acesse e crie sua conta api da marvel estarei deixando os links abaixo para poder ter acesso a suas chaves 
 a pública e a privada , após obter a chaves privada e públicas basta substituir os valores das variáveis 
 ```PUBLIC_KEY:Sua Chave Pública e PRIVATE_KEY:sua chave privada ```
-ambos ficam na pasta ```src/configs/index.json``` basta modificalo, apois isso podemos da continuidade veja a documentação abaixo:
+ambos ficam na pasta ```src/configs/index.json``` basta modificá-lo, apois isso podemos dar continuidade veja a documentação abaixo:
 api: https://developer.marvel.com
 documentação: https://developer.marvel.com/docs
 
+
 ##### Api Google Maps
 
-seguindo o tutoria do expo como gerar a sua api key da google que estou deixando abaixo:
+seguindo o tutorial do expo como gerar a sua api key da google que estou deixando abaixo:
 MapView: https://docs.expo.io/versions/latest/sdk/map-view/
-apois obter sua api key do google maps faça a seguinte comfiguraçao 
+após obter sua api key do google maps faça a seguinte configuração 
 no app.json :
   ```"android": {
       "adaptiveIcon": {
