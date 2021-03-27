@@ -63,10 +63,10 @@ function HomeScreen(){
         if(value===0){setActualPage(0); return}
         setActualPage(actualPage+value);
     }
-    const CallSetList=(items:any)=>{
+    const CallSetList=(items:Comics[])=>{
         setList([...list,...items]);  
     }
-    const CallSetListSearch=(items:any)=>{
+    const CallSetListSearch=(items:Comics[])=>{
         setList(items);  
     }
     const CallSetTotalPage=(total:number)=>{
@@ -80,8 +80,9 @@ function HomeScreen(){
             setSelectItem([...selectItem,comic]) 
         }else{
             const remove = selectItem;
-            const found = remove.findIndex((element:any) => element ===comic);
-            remove.splice(found, 1);
+            const found = remove.findIndex((element:Comics) => element ===comic);
+
+            remove.splice(found-1, 1);
             setSelectItem(remove)         
         }
         return ;
@@ -170,7 +171,7 @@ function HomeScreen(){
                 renderItem={({item,index})=>(
                     <Items 
                         comic={item} 
-                        selectComic={(value:any)=>handlesAddItems(value)}
+                        selectComic={(value:PropsAddComic)=>handlesAddItems(value)}
                         showModalDetails={(value:PropsItemsModal)=>CallModelList(value)} 
                         findItem={selectItem}
                      
