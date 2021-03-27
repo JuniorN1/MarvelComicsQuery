@@ -6,7 +6,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 interface Props{
     show:boolean;
     hiddenModal:any;
-    items:any;
+   
 }
 const ModalMaps=({show=false,hiddenModal}:Props)=>{
     const [position,setPosition] = useState({latitude:0,longitude:0}); 

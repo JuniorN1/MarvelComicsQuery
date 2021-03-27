@@ -20,7 +20,6 @@ interface Props{
 }
 const Items = ({showModalDetails,selectComic,comic,findItem}:Props)=>{ 
     const check =  findItem.find((element:Comic) => element.title ===comic.title);    
-    check!=undefined?console.log(check.title):false
     const [selectOrRemove,setSelectOrRemove] = useState<boolean>(
         check!=undefined?true:false
     )    

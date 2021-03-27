@@ -149,7 +149,7 @@ function HomeScreen(){
             <ModalMaps 
                 show={modalMapsProp} 
                 hiddenModal={()=>CallHiddenModalMaps()}
-                items={()=>{}}
+             
             />
             <ModalListe  
                 show={modalListProp.show} 
@@ -158,7 +158,7 @@ function HomeScreen(){
            
             />
             
-            <FlatList 
+            <FlatList         
                 data={list}
                 keyExtractor={(hq,index) => String(index)}            
                 onEndReachedThreshold={0.3}
