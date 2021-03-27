@@ -81,8 +81,7 @@ function HomeScreen(){
         }else{
             const remove = selectItem;
             const found = remove.findIndex((element:Comics) => element ===comic);
-
-            remove.splice(found-1, 1);
+            remove.splice(found - 1, 1);
             setSelectItem(remove)         
         }
         return ;
