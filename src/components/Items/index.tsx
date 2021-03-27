@@ -18,10 +18,15 @@ interface Props{
     comic:Comic;
     findItem :Comic[];
 }
-const Items = ({showModalDetails,selectComic,comic,findItem}:Props)=>{ 
-    const check =  findItem.find((element:Comic) => element.title ===comic.title);    
+const handlesFind=(comic:Comic,findItem:Comic[])=>{
+    const check =    findItem.find((element:Comic) => element.title ===comic.title);  
+    return check!=undefined?true:false
+}
+const Items =  ({showModalDetails,selectComic,comic,findItem}:Props)=>{ 
+   
+
     const [selectOrRemove,setSelectOrRemove] = useState<boolean>(
-        check!=undefined?true:false
+        handlesFind(comic,findItem)
     )    
     const handlesShowDetails=(comic:Comic) =>{
         showModalDetails({show:true,selectedItems:comic});

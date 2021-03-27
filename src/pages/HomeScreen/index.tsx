@@ -75,14 +75,17 @@ function HomeScreen(){
     const CallSetShowLoadingComic=(visible:boolean)=>{
         setShowLoadingComic(visible);
     }   
-    const handlesAddItems =  ({selected,comic}:PropsAddComic) =>{ 
+    const handlesAddItems =  async ({selected,comic}:PropsAddComic) =>{ 
         if(selected){    
             setSelectItem([...selectItem,comic]) 
         }else{
             const remove = selectItem;
-            const found = remove.findIndex((element:Comics) => element ===comic);
-            remove.splice(found - 1, 1);
-            setSelectItem(remove)         
+            const found = await remove.findIndex((element:Comics) => element ===comic);
+         
+          const resultRemove= await remove.splice(found-1, 1);
+          const[hq]=resultRemove
+       
+          if(hq.title!=comic.title)setSelectItem(remove)         
         }
         return ;
     }
@@ -148,8 +151,7 @@ function HomeScreen(){
             </View>
             <ModalMaps 
                 show={modalMapsProp} 
-                hiddenModal={()=>CallHiddenModalMaps()}
-             
+                hiddenModal={()=>CallHiddenModalMaps()}             
             />
             <ModalListe  
                 show={modalListProp.show} 
