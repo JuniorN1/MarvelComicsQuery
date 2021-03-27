@@ -1,5 +1,5 @@
 # MARVEL COMICS API  
-#### Link do apk:https://expo.io/artifacts/0d220144-3697-4f7c-863a-831b18871d75
+#### Link do apk: https://exp-shell-app-assets.s3.us-west-1.amazonaws.com/android/%40juniorsilva/MarvelComics-d5d87a1e7df441d68e1d5c7e3ace75c9-signed.apk
 
 ##### Projeto simples para listagem e buscas de Comics (Hqs) da marvel utilizando a api oficial !
 

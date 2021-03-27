@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -55,6 +55,7 @@ function HomeScreen(){
     }
     const CallShowModalMaps=()=>{
         setModalMapsProp(true)
+        
     }
     const CallHiddenModalMaps=()=>{
         setModalMapsProp(false)
@@ -76,16 +77,21 @@ function HomeScreen(){
         setShowLoadingComic(visible);
     }   
     const handlesAddItems =  async ({selected,comic}:PropsAddComic) =>{ 
+
         if(selected){    
             setSelectItem([...selectItem,comic]) 
         }else{
             const remove = selectItem;
-            const found = await remove.findIndex((element:Comics) => element ===comic);
-         
-          const resultRemove= await remove.splice(found-1, 1);
-          const[hq]=resultRemove
-       
-          if(hq.title!=comic.title)setSelectItem(remove)         
+            const found = await remove.findIndex((element:Comics) => element.title ===comic.title);         
+            const resultRemove= await remove.splice(found, 1);
+            const[hq]=resultRemove       
+            if(hq.title===comic.title)setSelectItem(remove) 
+            else{
+                Alert.alert(
+                    "Error",
+                    "Não Foi possivel remover o item!"
+                )
+            }        
         }
         return ;
     }
@@ -105,25 +111,30 @@ function HomeScreen(){
         }  
         CallSetShowLoadingComic(false)     
     } 
-    const handlesSeach=async (seach:string)=>{
-        CallSetPage(0);
-       if(seach===''){ 
-            CallSetListSearch([]);
-            loading(); 
-            return;}
-        try{
-            const response =  await searchComic(seach);            
-            CallSetListSearch(response); 
-        }catch(err){
-            Alert.alert(
-                "Error!",
-                "Não foi possivel listar os quadrinhos!"
-            )
-        }      
+    async function CallSearchComic(searchName:string) {
+            CallSetPage(0);
+            if(searchName===''){              
+                 await setList([]);
+                 loading(); 
+                 return;
+             }
+             try{
+                 const response =  await searchComic(searchName);            
+                 CallSetListSearch(response); 
+             }catch(err){
+                 Alert.alert(
+                     "Error!",
+                     "Não foi possivel listar os quadrinhos!"
+                 )
+                 
     }
+}
+    // useMemo(()=>CallSearchComic(),[searchName])
     useEffect(()=>{  
+
         loading();
     },[]);
+ 
     return (        
         <View style={styles.container}>
             <AwesomeAlert
@@ -149,7 +160,7 @@ function HomeScreen(){
                     placeholder="Busca Rapida!" 
                     placeholderTextColor="red" 
                     style={styles.seachBox}
-                    onChangeText={(text)=>handlesSeach(text)}           
+                    onChangeText={(text)=>CallSearchComic(text)}           
                 />
             </View>
             <ModalMaps 
