@@ -107,7 +107,10 @@ function HomeScreen(){
     } 
     const handlesSeach=async (seach:string)=>{
         CallSetPage(0);
-       if(seach===''){   loading(); return;}
+       if(seach===''){ 
+            CallSetListSearch([]);
+            loading(); 
+            return;}
         try{
             const response =  await searchComic(seach);            
             CallSetListSearch(response); 
