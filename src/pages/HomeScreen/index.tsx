@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, FlatList, Text, TextInput, View } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -7,7 +7,6 @@ import Items from '../../components/Items/index';
 import ModalListe from "../../components/modaLItem";
 import ModalMaps from "../../components/modalMap";
 import loadingComicas from '../../models/load';
-import searchComic from "../../models/seach";
 import styles from '../../styles/styles';
 
 interface Comics{
@@ -37,6 +36,7 @@ function HomeScreen(){
     });
     const [selectItem,setSelectItem]                =   useState<Comics[]>([]);
     const [modalMapsProp,setModalMapsProp]          =   useState<boolean>(false);
+    const [searchTitle,setSearchTitle]                =   useState<string>("thor");
     const CallModelList=({selectedItems,show}:PropsItemsModal)=>{ 
         setModalListProp(
             {
@@ -66,10 +66,7 @@ function HomeScreen(){
     }
     const CallSetList=(items:Comics[])=>{
         setList([...list,...items]);  
-    }
-    const CallSetListSearch=(items:Comics[])=>{
-        setList(items);  
-    }
+    } 
     const CallSetTotalPage=(total:number)=>{
         setTotalPage(total);
     }
@@ -99,10 +96,11 @@ function HomeScreen(){
         CallSetShowLoadingComic(true)
         try{            
             if(totalPage===list.length && actualPage>0)return;
-            const response =  await loadingComicas(actualPage);
+            const response =  await loadingComicas(actualPage,searchTitle);
+
             CallSetList(response);
             CallSetPage(50);           
-            if(totalPage===0)CallSetTotalPage(response.data.total);
+            if(totalPage===0)CallSetTotalPage(response.length);
         }catch(err){           
             Alert.alert(
                 "Error!",
@@ -111,30 +109,15 @@ function HomeScreen(){
         }  
         CallSetShowLoadingComic(false)     
     } 
-    async function CallSearchComic(searchName:string) {
-            CallSetPage(0);
-            if(searchName===''){              
-                 await setList([]);
-                 loading(); 
-                 return;
-             }
-             try{
-                 const response =  await searchComic(searchName);            
-                 CallSetListSearch(response); 
-             }catch(err){
-                 Alert.alert(
-                     "Error!",
-                     "Não foi possivel listar os quadrinhos!"
-                 )
-                 
+    const CallSetSearchTitle = (title:string)=>{
+        setList([]);
+        setSearchTitle(title)
     }
-}
-    // useMemo(()=>CallSearchComic(),[searchName])
-    useEffect(()=>{  
 
+    useEffect(()=>{  
         loading();
-    },[]);
- 
+    },[searchTitle]);
+    
     return (        
         <View style={styles.container}>
             <AwesomeAlert
@@ -159,8 +142,8 @@ function HomeScreen(){
                 <TextInput 
                     placeholder="Busca Rapida!" 
                     placeholderTextColor="red" 
-                    style={styles.seachBox}
-                    onChangeText={(text)=>CallSearchComic(text)}           
+                    style={styles.seachBox}                 
+                    onEndEditing={(event)=>CallSetSearchTitle(event.nativeEvent.text)}           
                 />
             </View>
             <ModalMaps 

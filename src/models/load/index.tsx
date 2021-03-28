@@ -12,12 +12,12 @@ interface Comic{
     description:string;
     thumbnail:string;
 }
-async function loadingComics(page:number) {
+async function loadingComics(page:number,title:string) {
     const timeStamp = Date.now().toString();
     const hash = createHash(timeStamp);
     const limit=50;
     const urlAPI =
-    `/comics?offset=${page}&format=comic&orderBy=issueNumber&limit=${limit}&ts=${timeStamp}&apikey=${Marvel_key.PUBLIC_KEY}&hash=${hash}`;    
+    `/comics?title=${title}&offset=${page}&format=comic&orderBy=issueNumber&limit=${limit}&ts=${timeStamp}&apikey=${Marvel_key.PUBLIC_KEY}&hash=${hash}`;    
     try{
         const response = await api.get(urlAPI);
         const{   
@@ -28,6 +28,7 @@ async function loadingComics(page:number) {
             { title,description,thumbnail}
             )
         })
+
         return result;
     }catch(err){
         Alert.alert(
