@@ -8,6 +8,7 @@ function createHash(timeStamp:any) {
     return hashedMessage;
 }
 interface Comic{
+    id:number;
     title:string;
     description:string;
     thumbnail:string;
@@ -15,7 +16,7 @@ interface Comic{
 async function loadingComics(page:number,title:string) {
     const timeStamp = Date.now().toString();
     const hash = createHash(timeStamp);
-    const limit=50;
+    const limit=10;
     const urlAPI =
     `/comics?title=${title}&offset=${page}&format=comic&orderBy=issueNumber&limit=${limit}&ts=${timeStamp}&apikey=${Marvel_key.PUBLIC_KEY}&hash=${hash}`;    
     try{
@@ -23,9 +24,9 @@ async function loadingComics(page:number,title:string) {
         const{   
             data,          
         } =response;
-        const result = data.data.results.map(({title,description,thumbnail}:Comic)=>{
+        const result = data.data.results.map(({title,description,thumbnail,id}:Comic)=>{
             return (
-            { title,description,thumbnail}
+            { title,description,thumbnail,id}
             )
         })
 

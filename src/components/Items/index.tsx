@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 interface Comic{  
+    id:number;
     description:string;
     title:string;
     thumbnail:{
@@ -19,11 +20,13 @@ interface Props{
     findItem :Comic[];
 }
 const handlesFind=(comic:Comic,findItem:Comic[])=>{
-    const check =    findItem.find((element:Comic) => element.title ===comic.title);  
-    return check!=undefined?true:false
+    const check =    findItem.find((element:Comic) => element.id ===comic.id); 
+
+
+    return check!=undefined? true:false
 }
 const Items =  ({showModalDetails,selectComic,comic,findItem}:Props)=>{ 
-   
+ 
 
     const [selectOrRemove,setSelectOrRemove] = useState<boolean>(
         handlesFind(comic,findItem)

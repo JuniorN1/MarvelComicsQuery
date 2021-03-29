@@ -10,6 +10,7 @@ import loadingComicas from '../../models/load';
 import styles from '../../styles/styles';
 
 interface Comics{
+    id:number;
     description:string;
     title:string;
     thumbnail:{
@@ -36,7 +37,7 @@ function HomeScreen(){
     });
     const [selectItem,setSelectItem]                =   useState<Comics[]>([]);
     const [modalMapsProp,setModalMapsProp]          =   useState<boolean>(false);
-    const [searchTitle,setSearchTitle]                =   useState<string>("thor");
+    const [searchTitle,setSearchTitle]              =   useState<string>("DeadPool");
     const CallModelList=({selectedItems,show}:PropsItemsModal)=>{ 
         setModalListProp(
             {
@@ -81,7 +82,8 @@ function HomeScreen(){
             const remove = selectItem;
             const found = await remove.findIndex((element:Comics) => element.title ===comic.title);         
             const resultRemove= await remove.splice(found, 1);
-            const[hq]=resultRemove       
+            const[hq]=resultRemove   
+       
             if(hq.title===comic.title)setSelectItem(remove) 
             else{
                 Alert.alert(
@@ -93,14 +95,15 @@ function HomeScreen(){
         return ;
     }
     const loading = async()=>{ 
-        CallSetShowLoadingComic(true)
-        try{            
-            if(totalPage===list.length && actualPage>0)return;
-            const response =  await loadingComicas(actualPage,searchTitle);
+        let search ;
 
+        searchTitle===""?search="thor":search=searchTitle;
+        CallSetShowLoadingComic(true)
+        try{     
+            const response =  await loadingComicas(actualPage,search);
             CallSetList(response);
-            CallSetPage(50);           
-            if(totalPage===0)CallSetTotalPage(response.length);
+            CallSetPage(5);           
+            CallSetTotalPage(response.length);
         }catch(err){           
             Alert.alert(
                 "Error!",
@@ -109,12 +112,14 @@ function HomeScreen(){
         }  
         CallSetShowLoadingComic(false)     
     } 
-    const CallSetSearchTitle = (title:string)=>{
-        setList([]);
+    const CallSetSearchTitle =  async(title:string)=>{
+        await setList([]);
+        await CallSetPage(0);         
         setSearchTitle(title)
     }
 
     useEffect(()=>{  
+
         loading();
     },[searchTitle]);
     
@@ -141,7 +146,7 @@ function HomeScreen(){
                 />
                 <TextInput 
                     placeholder="Busca Rapida!" 
-                    placeholderTextColor="red" 
+                    placeholderTextColor="red"                     
                     style={styles.seachBox}                 
                     onEndEditing={(event)=>CallSetSearchTitle(event.nativeEvent.text)}           
                 />

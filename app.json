@@ -30,7 +30,7 @@
       "useNextNotificationsApi": true,
       "config": {
         "googleMaps": {
-          "apiKey": ""
+          "apiKey": "AIzaSyCzdpVnTyBlORGVogXwGPxAbv4yAtg1AAU"
         }
       }
     }

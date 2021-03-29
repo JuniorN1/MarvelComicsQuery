@@ -3,6 +3,7 @@ import React from "react";
 import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 interface Comic{  
+    id:number;
     description:string;
     title:string;
     thumbnail:{
