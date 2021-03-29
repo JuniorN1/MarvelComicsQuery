@@ -94,13 +94,10 @@ function HomeScreen(){
         }
         return ;
     }
-    const loading = async()=>{ 
-        let search ;
-
-        searchTitle===""?search="thor":search=searchTitle;
+    const loading = async()=>{   
         CallSetShowLoadingComic(true)
-        try{     
-            const response =  await loadingComicas(actualPage,search);
+        try{  
+            const response =  await loadingComicas(actualPage,searchTitle===""?"DeadPool":searchTitle);
             CallSetList(response);
             CallSetPage(5);           
             CallSetTotalPage(response.length);
@@ -112,15 +109,15 @@ function HomeScreen(){
         }  
         CallSetShowLoadingComic(false)     
     } 
-    const CallSetSearchTitle =  async(title:string)=>{
-        await setList([]);
-        await CallSetPage(0);         
-        setSearchTitle(title)
+    const CallSetSearchTitle = async (title:string)=>{
+        if(title!="" && title!=searchTitle){          
+            list.length=0;
+            CallSetPage(0); 
+            if(list.length===0) setSearchTitle(title)        
+        }       
     }
-
-    useEffect(()=>{  
-
-        loading();
+    useEffect(()=>{ 
+       loading();
     },[searchTitle]);
     
     return (        
@@ -147,7 +144,8 @@ function HomeScreen(){
                 <TextInput 
                     placeholder="Busca Rapida!" 
                     placeholderTextColor="red"                     
-                    style={styles.seachBox}                 
+                    style={styles.seachBox}        
+          
                     onEndEditing={(event)=>CallSetSearchTitle(event.nativeEvent.text)}           
                 />
             </View>
